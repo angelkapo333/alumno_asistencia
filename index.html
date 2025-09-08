@@ -4,12 +4,49 @@
   <meta charset="UTF-8">
   <title>Asistencia Escolar</title>
   <style>
+    /* ===== FONDO GRADIENTE + BURBUJAS ===== */
     body {
       font-family: Arial, sans-serif;
-      background-color: #eef5f9;
       text-align: center;
       padding-top: 20px;
+      background: linear-gradient(135deg, #eef5f9, #dbe4ff);
+      overflow: hidden;
+      position: relative;
+      min-height: 100vh;
     }
+
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(52, 152, 219, 0.2);
+      animation: floatBubbles 15s infinite linear;
+    }
+
+    body::before {
+      width: 200px; height: 200px;
+      top: -50px; left: -50px;
+    }
+
+    body::after {
+      width: 300px; height: 300px;
+      bottom: -100px; right: -100px;
+      animation-duration: 20s;
+    }
+
+    @keyframes floatBubbles {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-50px) rotate(180deg); }
+      100% { transform: translateY(0) rotate(360deg); }
+    }
+
+    /* Mantener el contenido encima de las burbujas */
+    img.logo, h2, input, button, .error, #resultado {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== ESTILOS EXISTENTES ===== */
     img.logo {
       width: 140px;
       height: auto;
@@ -148,6 +185,10 @@
       }
     }
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
