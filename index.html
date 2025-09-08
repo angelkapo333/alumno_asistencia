@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Asistencia Escolar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef5f9;
+      text-align: center;
+      padding-top: 20px;
+    }
+    img.logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      width: 250px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    .oculto {
+      display: none;
+    }
+    .mensaje {
+      font-size: 26px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+    .icono {
+      font-size: 60px;
+      margin-top: 20px;
+    }
+    .estado {
+      font-size: 22px;
+      margin-top: 10px;
+    }
+    .hora {
+      font-size: 20px;
+      margin-top: 5px;
+    }
+    .puntual {
+      font-weight: bold;
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    .verde { color: green; }
+    .rojo { color: red; }
+    .naranja { color: orange; }
+    .error {
+      color: red;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGO de la escuela -->
+  <img src="download.jpg" alt="Logo Escuela Técnica 29" class="logo">
+
+  <h2>Ingreso al sistema de asistencia</h2>
+  <input type="email" id="correo" placeholder="Correo electrónico" required />
+  <br>
+  <input type="password" id="clave" placeholder="Contraseña" required />
+  <br>
+  <button onclick="verificarIngreso()">Ingresar</button>
+
+  <div class="error" id="mensajeError"></div>
+
+  <!-- Resultado -->
+  <div id="resultado" class="oculto">
+    <div id="iconoResultado" class="icono"></div>
+    <div id="mensajeResultado" class="mensaje"></div>
+    <div class="estado" id="estadoResultado"></div>
+    <div class="hora">Horario de entrada permitido: <strong>13:30</strong></div>
+    <div class="hora" id="horaLlegada">Horario de llegada: --:--</div>
+    <div class="puntual" id="mensajePuntualidad"></div>
+  </div>
+
+  <script>
+    const usuarios = [
+      { correo: "alumno@gmail.com", clave: "1234", tipo: "normal" },
+      { correo: "maria@gmail.com", clave: "5678", tipo: "normal" },
+      { correo: "ricardo@gmail.com", clave: "9999", tipo: "siempreTarde" }
+    ];
+
+    function verificarIngreso() {
+      const correo = document.getElementById('correo').value.trim();
+      const clave = document.getElementById('clave').value.trim();
+      const error = document.getElementById('mensajeError');
+      const resultado = document.getElementById('resultado');
+      const icono = document.getElementById('iconoResultado');
+      const mensaje = document.getElementById('mensajeResultado');
+      const estado = document.getElementById('estadoResultado');
+      const horaLlegada = document.getElementById('horaLlegada');
+      const puntualidad = document.getElementById('mensajePuntualidad');
+
+      const ahora = new Date();
+      const horas = ahora.getHours().toString().padStart(2, '0');
+      const minutos = ahora.getMinutes().toString().padStart(2, '0');
+      const horaTexto = `${horas}:${minutos}`;
+      horaLlegada.innerText = `Horario de llegada: ${horaTexto}`;
+
+      const llegadaMin = parseInt(horas) * 60 + parseInt(minutos);
+      const limiteMin = 14 * 60 + 40; // 14:40
+
+      const usuario = usuarios.find(user => user.correo === correo && user.clave === clave);
+
+      resultado.classList.remove('oculto');
+
+      if (usuario) {
+        icono.textContent = "✅";
+        icono.className = "icono verde";
+        mensaje.textContent = "Alumno registrado";
+        mensaje.className = "mensaje verde";
+        estado.innerHTML = "Estado de asistencia: <strong>Presente</strong>";
+        estado.className = "estado";
+
+        if (usuario.tipo === "siempreTarde") {
+          puntualidad.textContent = "⚠️ Llegó tarde";
+          puntualidad.className = "puntual naranja";
+        } else {
+          if (llegadaMin <= limiteMin) {
+            puntualidad.textContent = "✅ Llegó a tiempo";
+            puntualidad.className = "puntual verde";
+          } else {
+            puntualidad.textContent = "⚠️ Llegó tarde";
+            puntualidad.className = "puntual naranja";
+          }
+        }
+
+        error.textContent = "";
+      } else {
+        icono.textContent = "❌";
+        icono.className = "icono rojo";
+        mensaje.textContent = "Alumno no registrado";
+        mensaje.className = "mensaje rojo";
+        estado.innerHTML = "Estado de asistencia: <strong>Ausente</strong>";
+        puntualidad.textContent = "❌ No cumple normas de llegada";
+        puntualidad.className = "puntual rojo";
+        error.textContent = "";
+      }
+    }
+  </script>
+
+</body>
+</html>
