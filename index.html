@@ -4,120 +4,166 @@
   <meta charset="UTF-8">
   <title>Asistencia Escolar</title>
   <style>
-    /* ===== FONDO GRADIENTE + BURBUJAS ===== */
+    /* ===== FONDO GRADIENTE ANIMADO ===== */
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding-top: 20px;
-      background: linear-gradient(135deg, #eef5f9, #dbe4ff);
+      background: linear-gradient(270deg, #a1c4fd, #c2e9fb, #d4fc79, #96e6a1);
+      background-size: 800% 800%;
+      animation: gradienteAnimado 20s ease infinite;
       overflow: hidden;
       position: relative;
       min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    body::before, body::after {
-      content: "";
+    @keyframes gradienteAnimado {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ===== BURBUJAS MODERNAS ===== */
+    .burbuja {
       position: absolute;
       border-radius: 50%;
-      background: rgba(52, 152, 219, 0.2);
-      animation: floatBubbles 15s infinite linear;
+      background: rgba(255, 255, 255, 0.2);
+      animation: flotar 15s infinite ease-in-out;
+      z-index: 0;
     }
 
-    body::before {
+    .burbuja:nth-child(1) {
+      width: 120px; height: 120px;
+      top: 10%; left: 15%;
+      animation-duration: 18s;
+    }
+    .burbuja:nth-child(2) {
       width: 200px; height: 200px;
-      top: -50px; left: -50px;
+      bottom: 15%; right: 10%;
+      animation-duration: 22s;
     }
-
-    body::after {
-      width: 300px; height: 300px;
-      bottom: -100px; right: -100px;
+    .burbuja:nth-child(3) {
+      width: 80px; height: 80px;
+      top: 70%; left: 20%;
+      animation-duration: 25s;
+    }
+    .burbuja:nth-child(4) {
+      width: 150px; height: 150px;
+      bottom: 10%; left: 5%;
       animation-duration: 20s;
     }
 
-    @keyframes floatBubbles {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-50px) rotate(180deg); }
-      100% { transform: translateY(0) rotate(360deg); }
+    @keyframes flotar {
+      0% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-60px) scale(1.1); }
+      100% { transform: translateY(0) scale(1); }
     }
 
-    /* Mantener el contenido encima de las burbujas */
-    img.logo, h2, input, button, .error, #resultado {
+    /* ===== CARD DE LOGIN ===== */
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 380px;
       position: relative;
       z-index: 1;
+      backdrop-filter: blur(10px);
     }
 
-    /* ===== ESTILOS EXISTENTES ===== */
     img.logo {
-      width: 140px;
-      height: auto;
+      width: 150px;
       margin-bottom: 20px;
     }
-    input {
-      padding: 10px;
-      font-size: 16px;
-      margin: 10px;
-      width: 250px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    .oculto {
-      display: none;
-    }
-    .mensaje {
+
+    h2 {
+      margin-bottom: 20px;
       font-size: 26px;
+      color: #2c3e50;
+    }
+
+    input {
+      padding: 14px;
+      font-size: 18px;
+      margin: 12px 0;
+      width: 100%;
+      border: 2px solid #dcdde1;
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    input:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52,152,219,0.3);
+    }
+
+    button {
+      padding: 14px;
+      font-size: 18px;
+      width: 100%;
+      margin-top: 15px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease, transform 0.2s ease;
+    }
+    button:hover {
+      background: #2980b9;
+      transform: scale(1.05);
+    }
+
+    .oculto { display: none; }
+    .mensaje {
+      font-size: 28px;
       font-weight: bold;
       margin-top: 20px;
     }
-    .icono {
-      font-size: 60px;
-      margin-top: 20px;
-    }
-    .estado {
-      font-size: 22px;
-      margin-top: 10px;
-    }
-    .hora {
-      font-size: 20px;
-      margin-top: 5px;
-    }
-    .puntual {
-      font-weight: bold;
-      font-size: 20px;
-      margin-top: 10px;
-    }
+    .icono { font-size: 70px; margin-top: 20px; }
+    .estado { font-size: 22px; margin-top: 10px; }
+    .hora { font-size: 20px; margin-top: 5px; }
+    .puntual { font-weight: bold; font-size: 22px; margin-top: 10px; }
     .verde { color: green; }
     .rojo { color: red; }
     .naranja { color: orange; }
     .error {
       color: red;
       margin-top: 15px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGO de la escuela -->
-  <img src="download.jpg" alt="Logo Escuela Técnica 29" class="logo">
+  <!-- BURBUJAS EN EL FONDO -->
+  <div class="burbuja"></div>
+  <div class="burbuja"></div>
+  <div class="burbuja"></div>
+  <div class="burbuja"></div>
 
-  <h2>Ingreso al sistema de asistencia</h2>
-  <input type="email" id="correo" placeholder="Correo electrónico" required />
-  <br>
-  <input type="password" id="clave" placeholder="Contraseña" required />
-  <br>
-  <button onclick="verificarIngreso()">Ingresar</button>
+  <!-- CARD -->
+  <div class="card">
+    <img src="images.jpg" alt="Logo Escuela Técnica 29" class="logo">
+    <h2>Ingreso al sistema de asistencia</h2>
+    <input type="email" id="correo" placeholder="Correo electrónico" required />
+    <input type="password" id="clave" placeholder="Contraseña" required />
+    <button onclick="verificarIngreso()">Ingresar</button>
 
-  <div class="error" id="mensajeError"></div>
+    <div class="error" id="mensajeError"></div>
 
-  <!-- Resultado -->
-  <div id="resultado" class="oculto">
-    <div id="iconoResultado" class="icono"></div>
-    <div id="mensajeResultado" class="mensaje"></div>
-    <div class="estado" id="estadoResultado"></div>
-    <div class="hora">Horario de entrada permitido: <strong>13:30</strong></div>
-    <div class="hora" id="horaLlegada">Horario de llegada: --:--</div>
-    <div class="puntual" id="mensajePuntualidad"></div>
+    <!-- Resultado -->
+    <div id="resultado" class="oculto">
+      <div id="iconoResultado" class="icono"></div>
+      <div id="mensajeResultado" class="mensaje"></div>
+      <div class="estado" id="estadoResultado"></div>
+      <div class="hora">Horario de entrada permitido: <strong>13:30</strong></div>
+      <div class="hora" id="horaLlegada">Horario de llegada: --:--</div>
+      <div class="puntual" id="mensajePuntualidad"></div>
+    </div>
   </div>
 
   <script>
@@ -157,7 +203,6 @@
         mensaje.textContent = "Alumno registrado";
         mensaje.className = "mensaje verde";
         estado.innerHTML = "Estado de asistencia: <strong>Presente</strong>";
-        estado.className = "estado";
 
         if (usuario.tipo === "siempreTarde") {
           puntualidad.textContent = "⚠️ Llegó tarde";
@@ -185,10 +230,6 @@
       }
     }
   </script>
-
-</body>
-</html>
-
 
 </body>
 </html>
